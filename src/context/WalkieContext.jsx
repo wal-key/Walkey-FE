@@ -7,12 +7,16 @@ export function WalkieProvider({ children }) {
     const [time, setTime] = useState(30);
     const [routes, setRoutes] = useState([]);
     const [selectedRoute, setSelectedRoute] = useState(null);
+    const [user, setUser] = useState(null);
+    const [lastWalk, setLastWalk] = useState(null);
 
     const value = {
         theme, setTheme,
         time, setTime,
         routes, setRoutes,
-        selectedRoute, setSelectedRoute
+        selectedRoute, setSelectedRoute,
+        user, setUser,
+        lastWalk, setLastWalk
     };
 
     return (

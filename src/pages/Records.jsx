@@ -5,6 +5,7 @@ import './Records.css';
 
 export default function Records() {
     const navigate = useNavigate();
+    const { lastWalk } = useWalkie();
     // Get records from localStorage
     const records = JSON.parse(localStorage.getItem('walkie_records') || '[]');
 
@@ -21,15 +22,26 @@ export default function Records() {
                 </header>
 
                 <div className="stats-dashboard">
-                    <div className="stat-card">
+                    <div className="stat-card highlight">
                         <Activity className="icon" size={24} />
-                        <span className="value">{totalDist}km</span>
-                        <span className="label">누적 거리</span>
+                        <span className="value">{lastWalk?.dist || '0'}km</span>
+                        <span className="label">이번 산책 거리</span>
                     </div>
-                    <div className="stat-card">
+                    <div className="stat-card highlight">
                         <Clock className="icon" size={24} />
-                        <span className="value">{totalTime}분</span>
+                        <span className="value">{lastWalk?.time || '0'}분</span>
+                        <span className="label">이번 산책 시간</span>
+                    </div>
+                </div>
+
+                <div className="stats-summary-row">
+                    <div className="summary-item">
+                        <span className="label">누적 거리</span>
+                        <span className="value">{totalDist}km</span>
+                    </div>
+                    <div className="summary-item">
                         <span className="label">누적 시간</span>
+                        <span className="value">{totalTime}분</span>
                     </div>
                 </div>
 

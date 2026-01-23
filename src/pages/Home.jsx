@@ -6,14 +6,14 @@ import './Home.css';
 
 export default function Home() {
     const navigate = useNavigate();
-    const { theme } = useWalkie();
+    const { theme, user } = useWalkie();
 
     return (
         <div className={`home-container theme-${theme}`}>
             <div className="glass-panel content-box">
                 <header className="home-header">
-                    <h2>오늘의 산책</h2>
-                    <p>어떤 기분으로 걸으시겠어요?</p>
+                    <h2>안녕하세요, {user?.name || '산책러'}님!</h2>
+                    <p>오늘도 건강한 한 걸음 어떠세요?</p>
                 </header>
 
                 <section className="section">

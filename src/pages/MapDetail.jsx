@@ -41,9 +41,13 @@ function MapAdjuster({ route }) {
 
 export default function MapDetail() {
     const navigate = useNavigate();
-    const { theme, selectedRoute, setRoutes } = useWalkie();
+    const { theme, selectedRoute, setLastWalk } = useWalkie();
     const [routePath, setRoutePath] = useState([]);
     const [startPos] = useState([37.5665, 126.9780]); // Custom Start (Seoul City Hall)
+    const [isWalking, setIsWalking] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const [isRoadView, setIsRoadView] = useState(false);
 
     // Generate Route on Mount
     useEffect(() => {
@@ -72,20 +76,52 @@ export default function MapDetail() {
         setRoutePath(path);
     }, [selectedRoute, startPos, navigate]);
 
-    const handleFinish = () => {
-        // Save record (Mock)
+    // Elapsed Time Timer
+    useEffect(() => {
+        let timer;
+        if (isWalking) {
+            timer = setInterval(() => {
+                setElapsedTime(prev => prev + 1);
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isWalking]);
+
+    const handleStartStop = () => {
+        if (!isWalking) {
+            setIsWalking(true);
+            setStartTime(new Date());
+        } else {
+            if (window.confirm('산책을 그만하시겠습니까?')) {
+                alert('산책을 그만합니다.');
+                finishSession(false);
+            }
+        }
+    };
+
+    const handleAutoFinish = () => {
+        alert('산책을 마쳤습니다.');
+        finishSession(true);
+    };
+
+    const finishSession = (completed) => {
+        const actualTime = Math.ceil(elapsedTime / 60) || 1;
+        const actualDist = completed ? selectedRoute.dist : (selectedRoute.dist * (elapsedTime / (selectedRoute.time * 60))).toFixed(2);
+
         const newRecord = {
             id: Date.now(),
             date: new Date().toLocaleDateString(),
             theme: theme,
-            dist: selectedRoute.dist,
-            time: selectedRoute.time
+            dist: actualDist,
+            time: actualTime,
+            completed: completed
         };
 
-        // In real app, save to localStorage/DB
+        // Save record (Mock)
         const existing = JSON.parse(localStorage.getItem('walkie_records') || '[]');
         localStorage.setItem('walkie_records', JSON.stringify([newRecord, ...existing]));
 
+        setLastWalk(newRecord);
         navigate('/records');
     };
 
@@ -110,25 +146,48 @@ export default function MapDetail() {
                 <MapAdjuster route={routePath} />
             </MapContainer>
 
+            {/* RoadView Mock Overlay */}
+            {isRoadView && (
+                <div className="roadview-overlay" onClick={() => setIsRoadView(false)}>
+                    <div className="roadview-content">
+                        <h3>로드뷰 (미리보기)</h3>
+                        <div className="roadview-placeholder">
+                            <p>현재 위치의 로드뷰 화면이 이곳에 표시됩니다.</p>
+                            <img src="https://images.unsplash.com/photo-1513002048555-9005086ee46d?q=80&w=1000&auto=format&fit=crop" alt="Road View Mock" />
+                        </div>
+                        <button className="close-roadview">닫기</button>
+                    </div>
+                </div>
+            )}
+
             {/* Controls Overlay */}
             <div className="map-controls">
-                <button className="roadview-btn">로드뷰 Mock</button>
+                <button className="roadview-btn" onClick={() => setIsRoadView(true)}>
+                    로드뷰
+                </button>
+                {isWalking && (
+                    <button className="auto-finish-test-btn" onClick={handleAutoFinish}>
+                        (테스트) 강제 완료
+                    </button>
+                )}
             </div>
 
             <div className="map-overlay-bottom">
                 <div className="route-info-detail">
                     <div className="d-item">
-                        <span className="label">남은 시간</span>
-                        <span className="value">{selectedRoute?.time}분</span>
+                        <span className="label">소요 시간</span>
+                        <span className="value">
+                            {isWalking ? `${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}` : `${selectedRoute?.time}분`}
+                        </span>
                     </div>
                     <div className="d-item">
                         <span className="label">총 거리</span>
                         <span className="value">{selectedRoute?.dist}km</span>
                     </div>
                 </div>
-                <button className="finish-btn" onClick={handleFinish}>
+                <button className={`finish-btn ${isWalking ? 'walking' : ''}`} onClick={handleStartStop}>
                     <Navigation size={18} />
-                    산책 종료
+                    {isWalking ? '산책 끝내기' : '산책 시작'}
                 </button>
             </div>
         </div>
