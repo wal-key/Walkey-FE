@@ -1,0 +1,150 @@
+.records-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: #f0f2f5;
+}
+
+.records-box {
+    width: 100%;
+    max-width: 400px;
+    height: 90vh;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.records-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.records-header h2 {
+    font-size: 1.4rem;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.stats-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card .icon {
+    color: #2E7D32;
+    margin-bottom: 10px;
+}
+
+.stat-card .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.stat-card .label {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.gallery-section {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.gallery-section h3 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: white;
+    background-size: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-2px);
+}
+
+/* Theme backgrounds for thumbnails */
+.gallery-item.theme-nature {
+    background: linear-gradient(135deg, #4CAF50, #81C784);
+}
+
+.gallery-item.theme-silent {
+    background: linear-gradient(135deg, #607D8B, #90A4AE);
+}
+
+.gallery-item.theme-sparkling {
+    background: linear-gradient(135deg, #673AB7, #9575CD);
+}
+
+.gallery-item.theme-cafe {
+    background: linear-gradient(135deg, #795548, #A1887F);
+}
+
+.thumb-date {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.thumb-info {
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.empty-msg {
+    grid-column: span 2;
+    text-align: center;
+    color: #999;
+    margin-top: 30px;
+}
+
+.new-walk-btn {
+    width: 100%;
+    padding: 15px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-top: 20px;
+    cursor: pointer;
+}
