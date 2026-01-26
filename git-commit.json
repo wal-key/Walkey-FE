@@ -1,0 +1,9 @@
+{
+    "Commit type selector": {
+        "prefix": "::",
+        "body": [
+            "${1|add,remove,fix,update,refactor,rename,handle,apply|}: "
+        ],
+        "description": "Select commit type after ticket key"
+    }
+}
