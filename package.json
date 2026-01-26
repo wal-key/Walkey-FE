@@ -1,5 +1,5 @@
 {
-  "name": "emotional-walk",
+  "name": "walky",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -20,5 +20,12 @@
     "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.12.0",
     "vite": "^6.4.1"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.21",
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
   }
 }
