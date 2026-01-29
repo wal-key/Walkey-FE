@@ -164,9 +164,6 @@ export default function MapDetail() {
 
             {/* Controls Overlay */}
             <div className="map-controls">
-                <button className="roadview-btn" onClick={() => setIsRoadView(true)}>
-                    로드뷰
-                </button>
                 {isWalking && (
                     <button className="auto-finish-test-btn" onClick={handleAutoFinish}>
                         (테스트) 강제 완료
@@ -175,6 +172,9 @@ export default function MapDetail() {
             </div>
 
             <div className="map-overlay-bottom">
+                <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
+                    로드뷰
+                </button>
                 <div className="route-info-detail">
                     <div className="d-item">
                         <span className="label">소요 시간</span>

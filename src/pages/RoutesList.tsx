@@ -82,7 +82,9 @@ export default function RoutesList() {
     const routes = generateMockRoutes(theme, time);
 
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Seoul City Hall
-    const [hoveredRoutePath, setHoveredRoutePath] = useState<[number, number][]>([]);
+    const [previewRoutePath, setPreviewRoutePath] = useState<[number, number][]>([]);
+    const [localSelectedRoute, setLocalSelectedRoute] = useState<Route | null>(null);
+    const [isRoadView, setIsRoadView] = useState(false);
 
     const calculatePath = (route: Route) => {
         // Re-use logic for consistency
@@ -106,17 +108,26 @@ export default function RoutesList() {
         return path;
     };
 
-    const handleSelect = (route: Route) => {
-        setSelectedRoute(route);
-        navigate(`/map/${route.id}`);
+    const handleRouteClick = (route: Route) => {
+        setLocalSelectedRoute(route);
+        const path = calculatePath(route);
+        setPreviewRoutePath(path);
     };
 
-    const handleMouseEnter = (route: Route) => {
-        const path = calculatePath(route);
-        setHoveredRoutePath(path);
+    const handleConfirm = () => {
+        if (localSelectedRoute) {
+            setSelectedRoute(localSelectedRoute);
+            navigate(`/map/${localSelectedRoute.id}`);
+        }
     };
+
     return (
         <div className={`routes-list-container theme-${theme}`}>
+            {/* Top Left Back Button */}
+            <button onClick={() => navigate('/home')} className="back-btn-global">
+                <ArrowRight size={24} style={{ transform: 'rotate(180deg)' }} />
+            </button>
+
             {/* Background Map */}
             <div className="list-map-bg">
                 <MapContainer center={startPos} zoom={14} style={{ height: '100%', width: '100%' }} zoomControl={false}>
@@ -124,15 +135,31 @@ export default function RoutesList() {
                         url={THEME_TILES[theme] || THEME_TILES['nature']}
                         attribution='&copy; OSM'
                     />
-                    {hoveredRoutePath.length > 0 && <Polyline positions={hoveredRoutePath} color={theme === 'sparkling' ? '#9575CD' : '#FF5722'} weight={5} />}
+                    {previewRoutePath.length > 0 && <Polyline positions={previewRoutePath} color={theme === 'sparkling' ? '#9575CD' : '#FF5722'} weight={5} />}
                     <Marker position={startPos} />
-                    <MapUpdater center={startPos} route={hoveredRoutePath} />
+                    <MapUpdater center={startPos} route={previewRoutePath} />
                 </MapContainer>
             </div>
 
+            {/* RoadView Mock Overlay */}
+            {isRoadView && (
+                <div className="roadview-overlay" onClick={() => setIsRoadView(false)}>
+                    <div className="roadview-content">
+                        <h3>로드뷰 (미리보기)</h3>
+                        <div className="roadview-placeholder">
+                            <p>현재 위치의 로드뷰 화면이 이곳에 표시됩니다.</p>
+                            <img src="https://images.unsplash.com/photo-1513002048555-9005086ee46d?q=80&w=1000&auto=format&fit=crop" alt="Road View Mock" />
+                        </div>
+                        <button className="close-roadview">닫기</button>
+                    </div>
+                </div>
+            )}
+
             <div className="glass-panel list-box">
+                <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
+                    로드뷰
+                </button>
                 <header className="list-header">
-                    <button onClick={() => navigate('/home')} className="back-btn">←</button>
                     <h2>추천 산책로</h2>
                 </header>
 
@@ -140,9 +167,8 @@ export default function RoutesList() {
                     {routes.map(r => (
                         <div
                             key={r.id}
-                            className="route-card"
-                            onClick={() => handleSelect(r)}
-                            onMouseEnter={() => handleMouseEnter(r)}
+                            className={`route-card ${localSelectedRoute?.id === r.id ? 'selected' : ''}`}
+                            onClick={() => handleRouteClick(r)}
                         >
                             <div className="card-bg" style={{ background: r.bg }}></div>
                             <div className="card-content">
@@ -154,10 +180,20 @@ export default function RoutesList() {
                                 </div>
                             </div>
                             <div className="card-action">
-                                <ArrowRight size={20} />
+                                {localSelectedRoute?.id === r.id ? <div className="chk-circle"></div> : <ArrowRight size={20} />}
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div className="action-footer">
+                    <button
+                        className="confirm-btn"
+                        disabled={!localSelectedRoute}
+                        onClick={handleConfirm}
+                    >
+                        산책 시작하기
+                    </button>
                 </div>
             </div>
         </div >
