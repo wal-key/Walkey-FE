@@ -66,12 +66,13 @@
     z-index: 1000;
 }
 
-.roadview-btn, .auto-finish-test-btn {
+.roadview-btn,
+.auto-finish-test-btn {
     background: white;
     padding: 10px 15px;
     border-radius: 8px;
     border: none;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     font-weight: 500;
 }
@@ -89,11 +90,26 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 2000;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.roadview-btn-inner {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #f5f5f5;
+    padding: 6px 12px;
+    border-radius: 15px;
+    border: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #d32f2f;
+    cursor: pointer;
+    z-index: 10;
 }
 
 .roadview-content {
@@ -127,7 +143,7 @@
 .roadview-placeholder p {
     position: absolute;
     color: white;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     padding: 10px;
     border-radius: 5px;
 }
@@ -147,7 +163,7 @@
     left: 20px;
     right: 20px;
     z-index: 1000;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(10px);
     border-radius: 20px;
     padding: 20px;
