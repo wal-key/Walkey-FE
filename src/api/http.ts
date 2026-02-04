@@ -2,7 +2,7 @@ import ky from 'ky';
 
 // 1. 공통 설정 만들기
 export const api = ky.create({
-    prefixUrl:  'http://localhost:3001',
+    prefixUrl:  'http://localhost:3000',
     
     headers: {
         'content-type': 'application/json',

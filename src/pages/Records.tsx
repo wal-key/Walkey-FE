@@ -1,9 +1,31 @@
 import { useNavigate } from 'react-router-dom';
 import { useWalky, WalkyRecord } from '../context/WalkyContext';
 import { Activity, Clock } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import './Records.css';
+import { history, WalkHistoryResponse } from '../api/history';
 
 export default function Records() {
+
+    const [historyData, setHistoryData] = useState<WalkHistoryResponse['data'] | null>(null);
+
+    useEffect(() => {(
+        async () => {
+            try {
+                const res = await history('jelly');
+                console.log(res);
+                setHistoryData(res.data);
+            }
+            catch (e) {
+                console.log(e);
+            }
+        })();
+    }, [])
+
+    const check = ()=>{
+        console.log('historyData:', historyData?.session_info);
+    }
+
     const navigate = useNavigate();
     const { lastWalk } = useWalky();
     // Get records from localStorage
@@ -18,7 +40,7 @@ export default function Records() {
             <div className="glass-panel records-box">
                 <header className="records-header">
                     <button onClick={() => navigate('/home')} className="close-btn">×</button>
-                    <h2>나의 산책 기록</h2>
+                    <h2 onClick={()=>check()}>나의 산책 기록</h2>
                 </header>
 
                 <div className="stats-dashboard">
