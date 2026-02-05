@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import ThemeSelector from '../components/ThemeSelector';
 import TimeSlider from '../components/TimeSlider';
-import { useWalky } from '../context/WalkyContext';
+import { useWalkey } from '../context/WalkeyContext';
 import './Home.css';
 
 export default function Home() {
     const navigate = useNavigate();
-    const { theme, user } = useWalky();
+    const { theme, user } = useWalkey();
 
     return (
         <div className={`home-container theme-${theme}`}>

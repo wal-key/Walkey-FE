@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { LogIn, User, Lock } from 'lucide-react';
-import { useWalky } from '../context/WalkyContext';
+import { useWalkey } from '../context/WalkeyContext';
 import './Intro.css';
 
 export default function Intro() {
     const navigate = useNavigate();
-    const { setUser } = useWalky();
+    const { setUser } = useWalkey();
     const [showLogin, setShowLogin] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ export default function Intro() {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         // Mock Login logic
-        if (email === 'walky@example.com' && password === '1234') {
+        if (email === 'walkey@example.com' && password === '1234') {
             setUser({ name: '산책러', email });
             navigate('/home');
         } else {
@@ -30,7 +30,7 @@ export default function Intro() {
 
     return (
         <div className="intro-container">
-            <h1 className="logo-text fade-in">Walky</h1>
+            <h1 className="logo-text fade-in">Walkey</h1>
             <p className="fade-in-delayed mb-8">당신의 걸음마다 감성을 담아</p>
 
             {showLogin && (
@@ -40,7 +40,7 @@ export default function Intro() {
                             <User size={18} className="input-icon" />
                             <input
                                 type="email"
-                                placeholder="이메일 (walky@example.com)"
+                                placeholder="이메일 (walkey@example.com)"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required

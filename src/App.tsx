@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { WalkyProvider } from './context/WalkyContext';
+import { WalkeyProvider } from './context/WalkeyContext';
 import Intro from './pages/Intro';
 import Home from './pages/Home';
 import RoutesList from './pages/RoutesList';
@@ -8,7 +8,7 @@ import Records from './pages/Records';
 
 function App() {
     return (
-        <WalkyProvider>
+        <WalkeyProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Intro />} />
@@ -19,7 +19,7 @@ function App() {
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </BrowserRouter>
-        </WalkyProvider>
+        </WalkeyProvider>
     );
 }
 
