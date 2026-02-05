@@ -1,4 +1,4 @@
-import { useWalky, Theme } from '../context/WalkyContext';
+import { useWalkey, Theme } from '../context/WalkeyContext';
 import { Trees, Moon, Sparkles, Coffee } from 'lucide-react';
 import './ThemeSelector.css';
 
@@ -16,7 +16,7 @@ const THEMES: ThemeOption[] = [
 ];
 
 export default function ThemeSelector() {
-    const { theme, setTheme } = useWalky();
+    const { theme, setTheme } = useWalkey();
 
     return (
         <div className="theme-grid">

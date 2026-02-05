@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
-import { useWalky, Theme, WalkyRecord } from '../context/WalkyContext';
+import { useWalkey, Theme, WalkeyRecord } from '../context/WalkeyContext';
 import { ArrowLeft, Navigation } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 import './MapDetail.css';
@@ -41,7 +41,7 @@ function MapAdjuster({ route }: { route: [number, number][] }) {
 
 export default function MapDetail() {
     const navigate = useNavigate();
-    const { theme, selectedRoute, setLastWalk } = useWalky();
+    const { theme, selectedRoute, setLastWalk } = useWalkey();
     const [routePath, setRoutePath] = useState<[number, number][]>([]);
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Custom Start (Seoul City Hall)
     const [isWalking, setIsWalking] = useState(false);
@@ -110,7 +110,7 @@ export default function MapDetail() {
         const totalDist = parseFloat(selectedRoute.dist);
         const actualDist = completed ? selectedRoute.dist : (totalDist * (elapsedTime / (selectedRoute.time * 60))).toFixed(2);
 
-        const newRecord: WalkyRecord = {
+        const newRecord: WalkeyRecord = {
             id: Date.now(),
             date: new Date().toLocaleDateString(),
             theme: theme,
@@ -120,8 +120,8 @@ export default function MapDetail() {
         };
 
         // Save record (Mock)
-        const existing: WalkyRecord[] = JSON.parse(localStorage.getItem('walky_records') || '[]');
-        localStorage.setItem('walky_records', JSON.stringify([newRecord, ...existing]));
+        const existing: WalkeyRecord[] = JSON.parse(localStorage.getItem('walkey_records') || '[]');
+        localStorage.setItem('walkey_records', JSON.stringify([newRecord, ...existing]));
 
         setLastWalk(newRecord);
         navigate('/records');

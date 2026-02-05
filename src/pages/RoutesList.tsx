@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Theme, Route, useWalky } from '../context/WalkyContext';
+import { Theme, Route, useWalkey } from '../context/WalkeyContext';
 import { Clock, MapPin, ArrowRight } from 'lucide-react';
 import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet';
 import { useEffect, useState } from 'react';
@@ -78,7 +78,7 @@ function MapUpdater({ center, route }: MapUpdaterProps) {
 
 export default function RoutesList() {
     const navigate = useNavigate();
-    const { theme, time, setSelectedRoute } = useWalky();
+    const { theme, time, setSelectedRoute } = useWalkey();
     const routes = generateMockRoutes(theme, time);
 
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Seoul City Hall

@@ -1,9 +1,9 @@
 import { ChangeEvent } from 'react';
-import { useWalky } from '../context/WalkyContext';
+import { useWalkey } from '../context/WalkeyContext';
 import './TimeSlider.css';
 
 export default function TimeSlider() {
-    const { time, setTime } = useWalky();
+    const { time, setTime } = useWalkey();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTime(Number(e.target.value));
