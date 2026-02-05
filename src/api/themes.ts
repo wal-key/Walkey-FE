@@ -1,7 +1,7 @@
 import { api } from './http'
 
 const getThems = async ()=>{
-    return await api.get('themes').json
+    return await api.get('themes').json();
 }
 
 
