@@ -53,7 +53,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     <p className="modal-subtitle">
                         Walkey와 함께 당신의 여정을 시작하세요
                     </p>
+                    <a href="http://localhost:5173/walk-setup">산책 설정으로 이동</a>
                 </div>
+
 
                 <div className="modal-buttons">
                     {/* Naver Login */}

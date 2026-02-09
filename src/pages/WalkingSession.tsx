@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-
 import { useWalkey, Theme, WalkeyRecord } from '../context/WalkeyContext';
 import { ArrowLeft, Navigation } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
-import './MapDetail.css';
+import './WalkingSession.css';
 
 // Fix Leaflet Marker Icon
 import L from 'leaflet';
@@ -39,7 +39,7 @@ function MapAdjuster({ route }: { route: [number, number][] }) {
     return null;
 }
 
-export default function MapDetail() {
+export default function WalkingSession() {
     const navigate = useNavigate();
     const { theme, selectedRoute, setLastWalk } = useWalkey();
     const [routePath, setRoutePath] = useState<[number, number][]>([]);
@@ -51,7 +51,7 @@ export default function MapDetail() {
     // Generate Route on Mount
     useEffect(() => {
         if (!selectedRoute) {
-            navigate('/routes'); // Redirect if no route selected
+            navigate('/route-select'); // Redirect if no route selected
             return;
         }
 
@@ -128,9 +128,9 @@ export default function MapDetail() {
     };
 
     return (
-        <div className="map-page">
+        <div className="walking-session-page">
             <div className="map-overlay-top">
-                <button onClick={() => navigate('/routes')} className="icon-btn">
+                <button onClick={() => navigate('/route-select')} className="icon-btn">
                     <ArrowLeft />
                 </button>
                 <span className="route-title">{selectedRoute?.title}</span>

@@ -36,7 +36,7 @@ export default function Records() {
         <div className="records-container">
             <div className="glass-panel records-box">
                 <header className="records-header">
-                    <button onClick={() => navigate('/home')} className="close-btn">×</button>
+                    <button onClick={() => navigate('/walk-setup')} className="close-btn">×</button>
                     <h2 onClick={() => check()}>나의 산책 기록</h2>
                 </header>
 
@@ -80,7 +80,7 @@ export default function Records() {
                     </div>
                 </div>
 
-                <button className="new-walk-btn" onClick={() => navigate('/home')}>
+                <button className="new-walk-btn" onClick={() => navigate('/walk-setup')}>
                     새로운 산책 시작하기
                 </button>
             </div>
