@@ -32,10 +32,6 @@ export default function Records() {
     // Get records from localStorage
     const records: WalkeyRecord[] = JSON.parse(localStorage.getItem('walkey_records') || '[]');
 
-    // Calculate totals
-    const totalDist = records.reduce((acc, cur) => acc + Number(cur.dist), 0).toFixed(1);
-    const totalTime = records.reduce((acc, cur) => acc + Number(cur.time), 0);
-
     return (
         <div className="records-container">
             <div className="glass-panel records-box">
@@ -60,11 +56,11 @@ export default function Records() {
                 <div className="stats-summary-row">
                     <div className="summary-item">
                         <span className="label">누적 거리</span>
-                        <span className="value">{totalDist}km</span>
+                        <span className="value">{historyData?.session_info.actual_distance || 0}km</span>
                     </div>
                     <div className="summary-item">
                         <span className="label">누적 시간</span>
-                        <span className="value">{totalTime}분</span>
+                        <span className="value">{historyData?.session_info.actual_duration || 0}분</span>
                     </div>
                 </div>
 

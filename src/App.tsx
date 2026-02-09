@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import RoutesList from './pages/RoutesList';
 import MapDetail from './pages/MapDetail';
 import Records from './pages/Records';
+import Login from './pages/Login';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Intro />} />
                     <Route path="/home" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="/routes" element={<RoutesList />} />
                     <Route path="/map/:id" element={<MapDetail />} />
                     <Route path="/records" element={<Records />} />
