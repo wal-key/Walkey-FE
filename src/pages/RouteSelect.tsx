@@ -7,7 +7,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import './RoutesList.css';
+import './RouteSelect.css';
 
 // Fix Leaflet Marker Icon
 let DefaultIcon = L.icon({
@@ -76,7 +76,7 @@ function MapUpdater({ center, route }: MapUpdaterProps) {
 }
 
 
-export default function RoutesList() {
+export default function RouteSelect() {
     const navigate = useNavigate();
     const { theme, time, setSelectedRoute } = useWalkey();
     const routes = generateMockRoutes(theme, time);
@@ -117,14 +117,14 @@ export default function RoutesList() {
     const handleConfirm = () => {
         if (localSelectedRoute) {
             setSelectedRoute(localSelectedRoute);
-            navigate(`/map/${localSelectedRoute.id}`);
+            navigate(`/walking-session/${localSelectedRoute.id}`);
         }
     };
 
     return (
-        <div className={`routes-list-container theme-${theme}`}>
+        <div className={`route-select-container theme-${theme}`}>
             {/* Top Left Back Button */}
-            <button onClick={() => navigate('/home')} className="back-btn-global">
+            <button onClick={() => navigate('/walk-setup')} className="back-btn-global">
                 <ArrowRight size={24} style={{ transform: 'rotate(180deg)' }} />
             </button>
 
