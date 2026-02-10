@@ -8,6 +8,7 @@ import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import './RouteSelect.css';
+import RoadView from '../components/RoadView';
 
 // Fix Leaflet Marker Icon
 let DefaultIcon = L.icon({
@@ -142,18 +143,7 @@ export default function RouteSelect() {
             </div>
 
             {/* RoadView Mock Overlay */}
-            {isRoadView && (
-                <div className="roadview-overlay" onClick={() => setIsRoadView(false)}>
-                    <div className="roadview-content">
-                        <h3>로드뷰 (미리보기)</h3>
-                        <div className="roadview-placeholder">
-                            <p>현재 위치의 로드뷰 화면이 이곳에 표시됩니다.</p>
-                            <img src="https://images.unsplash.com/photo-1513002048555-9005086ee46d?q=80&w=1000&auto=format&fit=crop" alt="Road View Mock" />
-                        </div>
-                        <button className="close-roadview">닫기</button>
-                    </div>
-                </div>
-            )}
+            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} />
 
             <div className="glass-panel list-box">
                 <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
