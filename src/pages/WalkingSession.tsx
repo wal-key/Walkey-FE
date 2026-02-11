@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { useWalkey, Theme, WalkeyRecord } from '../context/WalkeyContext';
 import { ArrowLeft, Navigation } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
@@ -40,6 +40,16 @@ function MapAdjuster({ route }: { route: [number, number][] }) {
     return null;
 }
 
+// Component to handle map clicks for RoadView
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+    useMapEvents({
+        click: (e) => {
+            onClick(e.latlng.lat, e.latlng.lng);
+        },
+    });
+    return null;
+}
+
 export default function WalkingSession() {
     const navigate = useNavigate();
     const { theme, selectedRoute, setLastWalk } = useWalkey();
@@ -48,6 +58,7 @@ export default function WalkingSession() {
     const [isWalking, setIsWalking] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isRoadView, setIsRoadView] = useState(false);
+    const [clickedPos, setClickedPos] = useState<{ lat: number; lng: number } | null>(null);
 
     // Generate Route on Mount
     useEffect(() => {
@@ -147,10 +158,14 @@ export default function WalkingSession() {
                     <Popup>출발지</Popup>
                 </Marker>
                 <MapAdjuster route={routePath} />
+                <MapClickHandler onClick={(lat, lng) => {
+                    setClickedPos({ lat, lng });
+                    setIsRoadView(true);
+                }} />
             </MapContainer>
 
             {/* RoadView Mock Overlay */}
-            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} />
+            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} position={clickedPos} />
 
             {/* Controls Overlay */}
             <div className="map-controls">
@@ -162,9 +177,6 @@ export default function WalkingSession() {
             </div>
 
             <div className="map-overlay-bottom">
-                <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
-                    로드뷰
-                </button>
                 <div className="route-info-detail">
                     <div className="d-item">
                         <span className="label">소요 시간</span>
