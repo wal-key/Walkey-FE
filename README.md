@@ -20,7 +20,7 @@
 - `src/vite-env.d.ts`: Vite 환경변수 및 이미지 파일 등의 타입을 정의해주는 파일입니다.
 
 ### 전역 상태 (src/context)
-- `src/context/WalkyContext.tsx`: 선택한 테마, 경로, 산책 기록 등 앱 전체에서 공유해야 할 데이터를 관리하는 파일입니다.
+- `src/context/WalkeyContext.tsx`: 선택한 테마, 경로, 산책 기록 등 앱 전체에서 공유해야 할 데이터를 관리하는 파일입니다.
 
 ### 페이지 (src/pages)
 - `src/pages/Intro.tsx`: 앱 실행 시 가장 먼저 보여지는 인트로(스플래시) 화면입니다.

@@ -17,7 +17,7 @@ export interface User {
     email: string;
 }
 
-export interface WalkyRecord {
+export interface WalkeyRecord {
     id: number;
     date: string;
     theme: Theme;
@@ -26,7 +26,7 @@ export interface WalkyRecord {
     completed: boolean;
 }
 
-interface WalkyContextType {
+interface WalkeyContextType {
     theme: Theme;
     setTheme: (theme: Theme) => void;
     time: number;
@@ -37,21 +37,21 @@ interface WalkyContextType {
     setSelectedRoute: (route: Route | null) => void;
     user: User | null;
     setUser: (user: User | null) => void;
-    lastWalk: WalkyRecord | null;
-    setLastWalk: (record: WalkyRecord | null) => void;
+    lastWalk: WalkeyRecord | null;
+    setLastWalk: (record: WalkeyRecord | null) => void;
 }
 
-const WalkyContext = createContext<WalkyContextType | undefined>(undefined);
+const WalkeyContext = createContext<WalkeyContextType | undefined>(undefined);
 
-export function WalkyProvider({ children }: { children: ReactNode }) {
+export function WalkeyProvider({ children }: { children: ReactNode }) {
     const [theme, setTheme] = useState<Theme>('nature');
     const [time, setTime] = useState<number>(30);
     const [routes, setRoutes] = useState<Route[]>([]);
     const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
     const [user, setUser] = useState<User | null>(null);
-    const [lastWalk, setLastWalk] = useState<WalkyRecord | null>(null);
+    const [lastWalk, setLastWalk] = useState<WalkeyRecord | null>(null);
 
-    const value: WalkyContextType = {
+    const value: WalkeyContextType = {
         theme, setTheme,
         time, setTime,
         routes, setRoutes,
@@ -61,16 +61,16 @@ export function WalkyProvider({ children }: { children: ReactNode }) {
     };
 
     return (
-        <WalkyContext.Provider value={value}>
+        <WalkeyContext.Provider value={value}>
             {children}
-        </WalkyContext.Provider>
+        </WalkeyContext.Provider>
     );
 }
 
-export function useWalky() {
-    const context = useContext(WalkyContext);
+export function useWalkey() {
+    const context = useContext(WalkeyContext);
     if (context === undefined) {
-        throw new Error('useWalky must be used within a WalkyProvider');
+        throw new Error('useWalkey must be used within a WalkeyProvider');
     }
     return context;
 }

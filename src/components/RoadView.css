@@ -1,0 +1,58 @@
+/* RoadView Overlay */
+.roadview-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.roadview-content {
+    background: white;
+    width: 95%;
+    max-width: 800px;
+    padding: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    /* Header and Viewer rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.rv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+
+.rv-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.close-rv-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0 5px;
+}
+
+.close-rv-btn:hover {
+    color: #333;
+}
+
+.roadview-viewer {
+    width: 100%;
+    height: 450px;
+    background: #f0f0f0;
+}

@@ -1,4 +1,4 @@
-.home-container {
+.walk-setup-container {
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -9,19 +9,19 @@
 }
 
 /* Dynamic Backgrounds based on Theme */
-.home-container.theme-nature {
+.walk-setup-container.theme-nature {
     background: var(--bg-gradient-nature);
 }
 
-.home-container.theme-silent {
+.walk-setup-container.theme-silent {
     background: var(--bg-gradient-silent);
 }
 
-.home-container.theme-sparkling {
+.walk-setup-container.theme-sparkling {
     background: var(--bg-gradient-sparkling);
 }
 
-.home-container.theme-cafe {
+.walk-setup-container.theme-cafe {
     background: var(--bg-gradient-cafe);
 }
 
@@ -32,11 +32,11 @@
     text-align: center;
 }
 
-.home-header {
+.walk-setup-header {
     margin-bottom: 30px;
 }
 
-.home-header h2 {
+.walk-setup-header h2 {
     font-size: 1.8rem;
     margin-bottom: 5px;
 }

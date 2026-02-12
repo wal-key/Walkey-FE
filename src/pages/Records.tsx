@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useWalky, WalkyRecord } from '../context/WalkyContext';
+import { useWalkey, WalkeyRecord } from '../context/WalkeyContext';
 import { Activity, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import './Records.css';
@@ -9,38 +9,35 @@ export default function Records() {
 
     const [historyData, setHistoryData] = useState<WalkHistoryResponse['data'] | null>(null);
 
-    useEffect(() => {(
-        async () => {
-            try {
-                const res = await history('jelly');
-                console.log(res);
-                setHistoryData(res.data);
-            }
-            catch (e) {
-                console.log(e);
-            }
-        })();
+    useEffect(() => {
+        (
+            async () => {
+                try {
+                    const res = await history('jelly');
+                    console.log(res);
+                    setHistoryData(res.data);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            })();
     }, [])
 
-    const check = ()=>{
+    const check = () => {
         console.log('historyData:', historyData?.session_info);
     }
 
     const navigate = useNavigate();
-    const { lastWalk } = useWalky();
+    const { lastWalk } = useWalkey();
     // Get records from localStorage
-    const records: WalkyRecord[] = JSON.parse(localStorage.getItem('walky_records') || '[]');
-
-    // Calculate totals
-    const totalDist = records.reduce((acc, cur) => acc + Number(cur.dist), 0).toFixed(1);
-    const totalTime = records.reduce((acc, cur) => acc + Number(cur.time), 0);
+    const records: WalkeyRecord[] = JSON.parse(localStorage.getItem('walkey_records') || '[]');
 
     return (
         <div className="records-container">
             <div className="glass-panel records-box">
                 <header className="records-header">
-                    <button onClick={() => navigate('/home')} className="close-btn">×</button>
-                    <h2 onClick={()=>check()}>나의 산책 기록</h2>
+                    <button onClick={() => navigate('/walk-setup')} className="close-btn">×</button>
+                    <h2 onClick={() => check()}>나의 산책 기록</h2>
                 </header>
 
                 <div className="stats-dashboard">
@@ -59,11 +56,11 @@ export default function Records() {
                 <div className="stats-summary-row">
                     <div className="summary-item">
                         <span className="label">누적 거리</span>
-                        <span className="value">{totalDist}km</span>
+                        <span className="value">{historyData?.session_info.actual_distance || 0}km</span>
                     </div>
                     <div className="summary-item">
                         <span className="label">누적 시간</span>
-                        <span className="value">{totalTime}분</span>
+                        <span className="value">{historyData?.session_info.actual_duration || 0}분</span>
                     </div>
                 </div>
 
@@ -83,7 +80,7 @@ export default function Records() {
                     </div>
                 </div>
 
-                <button className="new-walk-btn" onClick={() => navigate('/home')}>
+                <button className="new-walk-btn" onClick={() => navigate('/walk-setup')}>
                     새로운 산책 시작하기
                 </button>
             </div>

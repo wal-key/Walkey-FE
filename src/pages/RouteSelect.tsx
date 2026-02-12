@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
-import { Theme, Route, useWalky } from '../context/WalkyContext';
+import { Theme, Route, useWalkey } from '../context/WalkeyContext';
 import { Clock, MapPin, ArrowRight } from 'lucide-react';
-import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Marker, useMap, useMapEvents } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import './RoutesList.css';
+import './RouteSelect.css';
+import RoadView from '../components/RoadView';
 
 // Fix Leaflet Marker Icon
 let DefaultIcon = L.icon({
@@ -75,16 +76,27 @@ function MapUpdater({ center, route }: MapUpdaterProps) {
     return null;
 }
 
+// Component to handle map clicks for RoadView
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+    useMapEvents({
+        click: (e) => {
+            onClick(e.latlng.lat, e.latlng.lng);
+        },
+    });
+    return null;
+}
 
-export default function RoutesList() {
+
+export default function RouteSelect() {
     const navigate = useNavigate();
-    const { theme, time, setSelectedRoute } = useWalky();
+    const { theme, time, setSelectedRoute } = useWalkey();
     const routes = generateMockRoutes(theme, time);
 
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Seoul City Hall
     const [previewRoutePath, setPreviewRoutePath] = useState<[number, number][]>([]);
     const [localSelectedRoute, setLocalSelectedRoute] = useState<Route | null>(null);
     const [isRoadView, setIsRoadView] = useState(false);
+    const [clickedPos, setClickedPos] = useState<{ lat: number; lng: number } | null>(null);
 
     const calculatePath = (route: Route) => {
         // Re-use logic for consistency
@@ -117,14 +129,14 @@ export default function RoutesList() {
     const handleConfirm = () => {
         if (localSelectedRoute) {
             setSelectedRoute(localSelectedRoute);
-            navigate(`/map/${localSelectedRoute.id}`);
+            navigate(`/walking-session/${localSelectedRoute.id}`);
         }
     };
 
     return (
-        <div className={`routes-list-container theme-${theme}`}>
+        <div className={`route-select-container theme-${theme}`}>
             {/* Top Left Back Button */}
-            <button onClick={() => navigate('/home')} className="back-btn-global">
+            <button onClick={() => navigate('/walk-setup')} className="back-btn-global">
                 <ArrowRight size={24} style={{ transform: 'rotate(180deg)' }} />
             </button>
 
@@ -138,27 +150,17 @@ export default function RoutesList() {
                     {previewRoutePath.length > 0 && <Polyline positions={previewRoutePath} color={theme === 'sparkling' ? '#9575CD' : '#FF5722'} weight={5} />}
                     <Marker position={startPos} />
                     <MapUpdater center={startPos} route={previewRoutePath} />
+                    <MapClickHandler onClick={(lat, lng) => {
+                        setClickedPos({ lat, lng });
+                        setIsRoadView(true);
+                    }} />
                 </MapContainer>
             </div>
 
             {/* RoadView Mock Overlay */}
-            {isRoadView && (
-                <div className="roadview-overlay" onClick={() => setIsRoadView(false)}>
-                    <div className="roadview-content">
-                        <h3>로드뷰 (미리보기)</h3>
-                        <div className="roadview-placeholder">
-                            <p>현재 위치의 로드뷰 화면이 이곳에 표시됩니다.</p>
-                            <img src="https://images.unsplash.com/photo-1513002048555-9005086ee46d?q=80&w=1000&auto=format&fit=crop" alt="Road View Mock" />
-                        </div>
-                        <button className="close-roadview">닫기</button>
-                    </div>
-                </div>
-            )}
+            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} position={clickedPos} />
 
             <div className="glass-panel list-box">
-                <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
-                    로드뷰
-                </button>
                 <header className="list-header">
                     <h2>추천 산책로</h2>
                 </header>
