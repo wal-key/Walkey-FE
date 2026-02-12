@@ -37,13 +37,22 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
                     <X size={20} />
                 </button>
 
-                {view === 'email' ? (
-                    <EmailLoginModal onSwitchToSocial={() => setView('social')} />
-                ) : (
-                    <SocialLoginModal onSwitchToEmail={() => setView('email')} />
-                )}
+                <div>
+                    {view === 'email' ? (
+                        <EmailLoginModal onSwitchToSocial={() => setView('social')} />
+                    ) : (
+                        <SocialLoginModal onSwitchToEmail={() => setView('email')} />
+                    )}
+                    <div className="modal-footer">
+                        로그인함으로써 Walkey의
+                        <a href="#" className="modal-link">이용약관(없음)</a> 및
+                        <a href="#" className="modal-link">개인정보처리방침</a>
+                        에 동의하게 됩니다.
+                    </div>
+                </div>
             </div>
-        </div>
+
+        </div >
     );
 };
 

@@ -281,3 +281,12 @@
 .scale-95 {
     transform: scale(0.95) translateY(1rem);
 }
+
+
+.error-message{
+    background-color: #f8bdbd;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: #842029;
+    font-size: 14px;
+}
