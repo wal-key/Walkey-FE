@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Theme, Route, useWalkey } from '../context/WalkeyContext';
 import { Clock, MapPin, ArrowRight } from 'lucide-react';
-import { MapContainer, TileLayer, Polyline, Marker, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Polyline, Marker, useMap, useMapEvents } from 'react-leaflet';
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -76,6 +76,16 @@ function MapUpdater({ center, route }: MapUpdaterProps) {
     return null;
 }
 
+// Component to handle map clicks for RoadView
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+    useMapEvents({
+        click: (e) => {
+            onClick(e.latlng.lat, e.latlng.lng);
+        },
+    });
+    return null;
+}
+
 
 export default function RouteSelect() {
     const navigate = useNavigate();
@@ -86,6 +96,7 @@ export default function RouteSelect() {
     const [previewRoutePath, setPreviewRoutePath] = useState<[number, number][]>([]);
     const [localSelectedRoute, setLocalSelectedRoute] = useState<Route | null>(null);
     const [isRoadView, setIsRoadView] = useState(false);
+    const [clickedPos, setClickedPos] = useState<{ lat: number; lng: number } | null>(null);
 
     const calculatePath = (route: Route) => {
         // Re-use logic for consistency
@@ -139,16 +150,17 @@ export default function RouteSelect() {
                     {previewRoutePath.length > 0 && <Polyline positions={previewRoutePath} color={theme === 'sparkling' ? '#9575CD' : '#FF5722'} weight={5} />}
                     <Marker position={startPos} />
                     <MapUpdater center={startPos} route={previewRoutePath} />
+                    <MapClickHandler onClick={(lat, lng) => {
+                        setClickedPos({ lat, lng });
+                        setIsRoadView(true);
+                    }} />
                 </MapContainer>
             </div>
 
             {/* RoadView Mock Overlay */}
-            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} />
+            <RoadView isOpen={isRoadView} onClose={() => setIsRoadView(false)} position={clickedPos} />
 
             <div className="glass-panel list-box">
-                <button className="roadview-btn-inner" onClick={() => setIsRoadView(true)}>
-                    로드뷰
-                </button>
                 <header className="list-header">
                     <h2>추천 산책로</h2>
                 </header>
