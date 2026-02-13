@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Theme, Route, useWalkey } from '../context/WalkeyContext';
+import { Theme, useWalkey } from '../context/WalkeyContext';
 import { Clock, MapPin, ArrowRight } from 'lucide-react';
 import { MapContainer, TileLayer, Polyline, Marker, useMap, useMapEvents } from 'react-leaflet';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,8 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import './RouteSelect.css';
 import RoadView from '../components/RoadView';
+import { getRoutes, RouteItem } from '../api/routes';
+
 
 // Fix Leaflet Marker Icon
 let DefaultIcon = L.icon({
@@ -19,31 +21,7 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const generateMockRoutes = (theme: Theme, time: number): Route[] => {
-    const adjectives: Record<Theme, string[]> = {
-        nature: ['숲내음 가득한', '나무 그늘', '피톤치드'],
-        silent: ['고요한', '사색하기 좋은', '한적한'],
-        sparkling: ['빛나는', '낭만적인', '도시의 밤'],
-        cafe: ['커피향 나는', '힙한 골목', '디저트']
-    };
-
-    const bgs: Record<Theme, string> = {
-        nature: 'linear-gradient(to right, #e8f5e9, #a5d6a7)',
-        silent: 'linear-gradient(to right, #eceff1, #b0bec5)',
-        sparkling: 'linear-gradient(to right, #311b92, #512da8)',
-        cafe: 'linear-gradient(to right, #efebe9, #d7ccc8)'
-    };
-
-    return [1, 2, 3].map(i => ({
-        id: i,
-        title: `${adjectives[theme][i - 1]} 산책로 ${i}`,
-        desc: `${time}분 동안 즐기는 ${theme} 테마 코스입니다.`,
-        time: time,
-        dist: (time * 0.06 + Math.random() * 0.2).toFixed(1),
-        bg: bgs[theme],
-        theme: theme
-    }));
-};
+// Mock generation logic removed (using real API)
 
 const THEME_TILES: Record<Theme, string> = {
     nature: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -90,45 +68,54 @@ function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => v
 export default function RouteSelect() {
     const navigate = useNavigate();
     const { theme, time, setSelectedRoute } = useWalkey();
-    const routes = generateMockRoutes(theme, time);
+    const [routes, setRoutes] = useState<RouteItem[]>([]); // 서버에서 올 산책로들
+    const [isLoading, setIsLoading] = useState(true);      // 로딩 중인지 확인용
 
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Seoul City Hall
     const [previewRoutePath, setPreviewRoutePath] = useState<[number, number][]>([]);
-    const [localSelectedRoute, setLocalSelectedRoute] = useState<Route | null>(null);
+    const [localSelectedRoute, setLocalSelectedRoute] = useState<RouteItem | null>(null);
     const [isRoadView, setIsRoadView] = useState(false);
     const [clickedPos, setClickedPos] = useState<{ lat: number; lng: number } | null>(null);
 
-    const calculatePath = (route: Route) => {
-        // Re-use logic for consistency
-        const factor = route.time / 60;
-        const radius = 0.005 * factor + 0.002;
-        const steps = 15;
-        const path: [number, number][] = [];
+    // Fetch Routes from Backend
+    useEffect(() => {
+        const fetchRoutes = async () => {
+            setIsLoading(true);
+            try {
+                const themeIdMap: Record<Theme, number> = {
+                    nature: 1, silent: 2, sparkling: 3, cafe: 4
+                };
+                console.log('📡 API 요청 시작:', { theme, themeId: themeIdMap[theme], time });
+                const response = await getRoutes(themeIdMap[theme], time);
+                console.log('✅ API 응답 성공:', response.data);
+                setRoutes(response.data);
+            } catch (error) {
+                console.error('❌ API 호출 실패:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchRoutes();
+    }, [theme, time]);
 
-        // Use route.id to slightly vary direction or shape if needed, here just same pattern
-        // Adding pseudo-randomness based on ID to make them look different
-        const seedAngle = route.id * (Math.PI / 2);
-
-        for (let i = 0; i <= steps; i++) {
-            const theta = (i / steps) * 2 * Math.PI;
-            const r = radius * (0.8 + Math.sin(theta * 3 + seedAngle) * 0.2); // vary shape
-            const lat = startPos[0] + r * Math.sin(theta);
-            const lng = startPos[1] + r * Math.cos(theta);
-            path.push([lat, lng]);
-        }
-        path.push(path[0]);
-        return path;
-    };
-
-    const handleRouteClick = (route: Route) => {
+    const handleRouteClick = (route: RouteItem) => {
         setLocalSelectedRoute(route);
-        const path = calculatePath(route);
-        setPreviewRoutePath(path);
+        // Transform backend [Coord] to Leaflet [[number, number]]
+        const leafletPath: [number, number][] = route.path.map(c => [c.lat, c.lng]);
+        setPreviewRoutePath(leafletPath);
     };
 
     const handleConfirm = () => {
         if (localSelectedRoute) {
-            setSelectedRoute(localSelectedRoute);
+            setSelectedRoute({
+                id: localSelectedRoute.id,
+                title: localSelectedRoute.name,
+                theme: theme,
+                time: localSelectedRoute.estimated_time,
+                dist: String(localSelectedRoute.total_distance),
+                desc: `${localSelectedRoute.estimated_time}분 추천 코스`,
+                path: localSelectedRoute.path
+            });
             navigate(`/walking-session/${localSelectedRoute.id}`);
         }
     };
@@ -166,26 +153,40 @@ export default function RouteSelect() {
                 </header>
 
                 <div className="routes-grid">
-                    {routes.map(r => (
-                        <div
-                            key={r.id}
-                            className={`route-card ${localSelectedRoute?.id === r.id ? 'selected' : ''}`}
-                            onClick={() => handleRouteClick(r)}
-                        >
-                            <div className="card-bg" style={{ background: r.bg }}></div>
-                            <div className="card-content">
-                                <h3>{r.title}</h3>
-                                <p className="desc">{r.desc}</p>
-                                <div className="stats">
-                                    <span><Clock size={14} /> {r.time}분</span>
-                                    <span><MapPin size={14} /> {r.dist}km</span>
+                    {isLoading ? (
+                        <div className="loading-state">산책로를 불러오는 중입니다...</div>
+                    ) : routes.length === 0 ? (
+                        <div className="empty-state">조건에 맞는 산책로가 없습니다.</div>
+                    ) : (
+                        routes.map(r => (
+                            <div
+                                key={r.id}
+                                className={`route-card ${localSelectedRoute?.id === r.id ? 'selected' : ''}`}
+                                onClick={() => handleRouteClick(r)}
+                            >
+                                <div
+                                    className="card-bg"
+                                    style={{
+                                        backgroundImage: r.thumbnail_url ? `url(${r.thumbnail_url})` : 'none',
+                                        backgroundColor: '#eee',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center'
+                                    }}
+                                ></div>
+                                <div className="card-content">
+                                    <h3>{r.name}</h3>
+                                    <p className="desc">{r.estimated_time}분 추천 코스</p>
+                                    <div className="stats">
+                                        <span><Clock size={14} /> {r.estimated_time}분</span>
+                                        <span><MapPin size={14} /> {r.total_distance}km</span>
+                                    </div>
+                                </div>
+                                <div className="card-action">
+                                    {localSelectedRoute?.id === r.id ? <div className="chk-circle"></div> : <ArrowRight size={20} />}
                                 </div>
                             </div>
-                            <div className="card-action">
-                                {localSelectedRoute?.id === r.id ? <div className="chk-circle"></div> : <ArrowRight size={20} />}
-                            </div>
-                        </div>
-                    ))}
+                        ))
+                    )}
                 </div>
 
                 <div className="action-footer">
