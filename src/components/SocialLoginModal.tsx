@@ -2,9 +2,23 @@ import React from 'react';
 import naverLogo from '../assets/naver.png';
 import './LoginModal.css'; // Shared styles
 
+
 interface SocialLoginModalProps {
     onSwitchToEmail: () => void;
 }
+
+const url = import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com'; // 나중에 환경변수만 남기기 
+
+
+type Provider = 'github' | 'google' | 'naver' | 'kakao';
+
+const socialLogin = async (provider: Provider) => {
+    const data = await fetch(`${url}/api/auth/signin/${provider}`).then((res) => res.json());
+    window.location.href = data.url;
+}
+
+
+
 
 const SocialLoginModal: React.FC<SocialLoginModalProps> = ({ onSwitchToEmail }) => {
     return (
@@ -19,19 +33,19 @@ const SocialLoginModal: React.FC<SocialLoginModalProps> = ({ onSwitchToEmail }) 
                     ← 이메일로 로그인하기
                 </button>
 
-                <button className="modal-btn btn-naver">
+                <button className="modal-btn btn-naver" onClick={() => socialLogin('naver')}>
                     <img src={naverLogo} alt="Naver" width="20" height="20" />
                     <span>네이버로 시작하기</span>
                 </button>
 
-                <button className="modal-btn btn-kakao">
+                <button className="modal-btn btn-kakao" onClick={() => socialLogin('kakao')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 3C7.58 3 4 5.79 4 9.24C4 11.23 5.21 13 7.06 14.18L6.29 17.58C6.23 17.82 6.55 18.01 6.74 17.85L10.74 14.93C11.15 14.98 11.57 15.01 12 15.01C16.42 15.01 20 12.22 20 8.77C20 5.32 16.42 3 12 3Z" />
                     </svg>
                     <span>카카오로 시작하기</span>
                 </button>
 
-                <button className="modal-btn btn-google">
+                <button className="modal-btn btn-google" onClick={() => socialLogin('google')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                         <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -41,7 +55,7 @@ const SocialLoginModal: React.FC<SocialLoginModalProps> = ({ onSwitchToEmail }) 
                     <span>Google로 시작하기</span>
                 </button>
 
-                <button className="modal-btn btn-github">
+                <button className="modal-btn btn-github" onClick={() => socialLogin('github')}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.66-3.795-1.455-3.795-1.455-.54-1.38-1.335-1.755-1.335-1.755-1.095-.75.075-.735.075-.735 1.215.09 1.845 1.245 1.845 1.245 1.08 1.86 2.805 1.32 3.495 1.005.105-.78.42-1.32.765-1.62-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405 1.02 0 2.04.135 3 .405 2.28-1.545 3.285-1.23 3.285-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.285 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                     </svg>

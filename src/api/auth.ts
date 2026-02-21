@@ -29,7 +29,7 @@ const authApi = api.extend({
 export const login = async (email: string, password: string) => {
     return await authApi.post('api/users/signin', {
         json: { email, password }
-    }).json();
+    });
 };
 
 
