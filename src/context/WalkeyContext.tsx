@@ -8,8 +8,9 @@ export interface Route {
     desc: string;
     time: number;
     dist: string;
-    bg: string;
+    bg?: string;
     theme: Theme;
+    path?: { lat: number; lng: number }[];
 }
 
 export interface User {

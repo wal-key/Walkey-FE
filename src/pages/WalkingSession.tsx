@@ -67,24 +67,28 @@ export default function WalkingSession() {
             return;
         }
 
-        // Mock Route Generation (Loop)
-        const time = selectedRoute.time;
-        const factor = time / 60;
-        const radius = 0.005 * factor + 0.002;
-        const steps = 15;
-        const path: [number, number][] = [];
+        if (selectedRoute.path) {
+            // Use real path from server
+            const leafletPath: [number, number][] = selectedRoute.path.map(c => [c.lat, c.lng]);
+            setRoutePath(leafletPath);
+        } else {
+            // Fallback: Mock Route Generation (Loop)
+            const time = selectedRoute.time;
+            const factor = time / 60;
+            const radius = 0.005 * factor + 0.002;
+            const steps = 15;
+            const path: [number, number][] = [];
 
-        for (let i = 0; i <= steps; i++) {
-            const theta = (i / steps) * 2 * Math.PI;
-            // Add some noise for 'natural' walk
-            const r = radius * (0.8 + Math.random() * 0.4);
-            const lat = startPos[0] + r * Math.sin(theta) * 0.8;
-            const lng = startPos[1] + r * Math.cos(theta);
-            path.push([lat, lng]);
+            for (let i = 0; i <= steps; i++) {
+                const theta = (i / steps) * 2 * Math.PI;
+                const r = radius * (0.8 + Math.random() * 0.4);
+                const lat = startPos[0] + r * Math.sin(theta) * 0.8;
+                const lng = startPos[1] + r * Math.cos(theta);
+                path.push([lat, lng]);
+            }
+            path.push(path[0]);
+            setRoutePath(path);
         }
-        // Close loop
-        path.push(path[0]);
-        setRoutePath(path);
     }, [selectedRoute, startPos, navigate]);
 
     // Elapsed Time Timer
