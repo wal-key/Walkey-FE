@@ -14,8 +14,10 @@ export interface Route {
 }
 
 export interface User {
-    name: string;
+    id: string;
     email: string;
+    username: string;
+    avatar_url: string;
 }
 
 export interface WalkeyRecord {

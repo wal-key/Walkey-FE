@@ -2,7 +2,7 @@ import ky from 'ky';
 
 // 1. 공통 설정 만들기
 export const api = ky.create({
-    prefixUrl: 'https://walkey-be.onrender.com/',
+    prefixUrl: 'https://walkey-be.onrender.com',
 
     headers: {
         'content-type': 'application/json',
@@ -29,6 +29,7 @@ export const api = ky.create({
                     console.log('로그인이 만료되었습니다.');
                     localStorage.removeItem('accessToken');
                 }
+
             }
         ]
     },
