@@ -3,22 +3,29 @@ import './LoginModal.css'; // Shared styles
 import { useState } from 'react';
 import login from '../api/auth';
 import { useNavigate } from 'react-router-dom';
+import { useWalkey } from '../context/WalkeyContext';
 
 interface EmailLoginModalProps {
     onSwitchToSocial: () => void;
 }
 
 const EmailLoginModal: React.FC<EmailLoginModalProps> = ({ onSwitchToSocial }) => {
+    const { setUser } = useWalkey()
     const navigate = useNavigate();
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
 
+
     const handleLogin = async (id: string, password: string) => {
         try {
             const loginData = await login(id, password);
+            const data = await loginData.json() as any;
+            console.log('loginData:', data.data.user);
+            setUser(data.data.user); // 로그인 성공 시 사용자 정보 저장
+            // setUser(data.user);
             navigate('/walk-setup'); // 급하니깐 일단 이렇게만 ㅎㅎ
-            console.log('loginData:', loginData);
+            
         } catch (err: any) {
             const data = await err.response.json();
             setErrMessage(data.message || '로그인에 실패했습니다. 다시 시도해주세요.');
@@ -33,7 +40,7 @@ const EmailLoginModal: React.FC<EmailLoginModalProps> = ({ onSwitchToSocial }) =
             </div>
 
             <div className="login-form">
-                {errMessage && <p className="error-message">{errMessage}</p>} 
+                {errMessage && <p className="error-message">{errMessage}</p>}
                 <div className="input-group">
                     <label className="login-label">이메일</label>
                     <input type="email" className="login-input" placeholder="name@example.com" value={id} onChange={(e) => setId(e.target.value)} />
