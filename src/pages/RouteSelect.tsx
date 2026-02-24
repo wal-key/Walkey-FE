@@ -47,7 +47,12 @@ function MapUpdater({ center, route }: MapUpdaterProps) {
     useEffect(() => {
         if (route && route.length > 0) {
             const bounds = L.latLngBounds(route);
-            map.fitBounds(bounds, { padding: [50, 50] });
+            map.fitBounds(bounds, {
+                padding: [50, 50],
+                maxZoom: 16,
+                animate: true,
+                duration: 1.0
+            });
         }
     }, [route, map]);
 
@@ -100,8 +105,9 @@ export default function RouteSelect() {
 
     const handleRouteClick = (route: RouteItem) => {
         setLocalSelectedRoute(route);
-        // Transform backend [Coord] to Leaflet [[number, number]]
-        const leafletPath: [number, number][] = route.path.map(c => [c.lat, c.lng]);
+        // Prioritize 'detail_paths' for smoother lines
+        const rawPath = route.detail_paths || route.paths || route.path || [];
+        const leafletPath: [number, number][] = rawPath.map(c => [c.lat, c.lng]);
         setPreviewRoutePath(leafletPath);
     };
 
@@ -112,9 +118,9 @@ export default function RouteSelect() {
                 title: localSelectedRoute.name,
                 theme: theme,
                 time: localSelectedRoute.estimated_time,
-                dist: String(localSelectedRoute.total_distance),
+                dist: (localSelectedRoute.total_distance / 1000).toFixed(1),
                 desc: `${localSelectedRoute.estimated_time}분 추천 코스`,
-                path: localSelectedRoute.path
+                path: localSelectedRoute.detail_paths || localSelectedRoute.paths || localSelectedRoute.path || []
             });
             navigate(`/walking-session/${localSelectedRoute.id}`);
         }
@@ -134,8 +140,16 @@ export default function RouteSelect() {
                         url={THEME_TILES[theme] || THEME_TILES['nature']}
                         attribution='&copy; OSM'
                     />
-                    {previewRoutePath.length > 0 && <Polyline positions={previewRoutePath} color={theme === 'sparkling' ? '#9575CD' : '#FF5722'} weight={5} />}
-                    <Marker position={startPos} />
+                    {previewRoutePath.length > 0 && (
+                        <Polyline
+                            positions={previewRoutePath}
+                            color={theme === 'sparkling' ? '#9575CD' : theme === 'nature' ? '#2E7D32' : '#FF5722'}
+                            weight={6}
+                            opacity={0.8}
+                            lineJoin="round"
+                        />
+                    )}
+                    <Marker position={previewRoutePath.length > 0 ? previewRoutePath[0] : startPos} />
                     <MapUpdater center={startPos} route={previewRoutePath} />
                     <MapClickHandler onClick={(lat, lng) => {
                         setClickedPos({ lat, lng });
@@ -178,7 +192,7 @@ export default function RouteSelect() {
                                     <p className="desc">{r.estimated_time}분 추천 코스</p>
                                     <div className="stats">
                                         <span><Clock size={14} /> {r.estimated_time}분</span>
-                                        <span><MapPin size={14} /> {r.total_distance}km</span>
+                                        <span><MapPin size={14} /> {(r.total_distance / 1000).toFixed(1)}km</span>
                                     </div>
                                 </div>
                                 <div className="card-action">
