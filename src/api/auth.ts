@@ -27,7 +27,7 @@ const authApi = api.extend({
 
 // 로그인 api로 예시 든거임!
 export const login = async (email: string, password: string) => {
-    return await authApi.post('api/users/signin', {
+    return await authApi.post('api/auth/login', {
         json: { email, password }
     });
 };
