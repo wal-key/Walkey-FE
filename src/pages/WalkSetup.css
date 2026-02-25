@@ -25,6 +25,14 @@
     background: var(--bg-gradient-cafe);
 }
 
+.walk-setup-container.theme-energy {
+    background: var(--bg-gradient-energy);
+}
+
+.walk-setup-container.theme-random {
+    background: var(--bg-gradient-random);
+}
+
 .content-box {
     width: 100%;
     max-width: 400px;
@@ -84,4 +92,14 @@
 
 .theme-cafe .find-route-btn {
     background: var(--color-primary-cafe);
+}
+
+.theme-energy .find-route-btn {
+    background: var(--color-primary-energy);
+}
+
+.theme-random .find-route-btn {
+    background: var(--color-primary-random);
+    color: #333;
+    /* Darker text for readability on yellow */
 }
