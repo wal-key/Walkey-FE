@@ -2,7 +2,8 @@ import ky from 'ky';
 
 // 1. 공통 설정 만들기
 export const api = ky.create({
-    prefixUrl: 'https://walkey-be.onrender.com/api',
+    prefixUrl: 'https://walkey-be.onrender.com',
+    credentials: 'include', // 쿠키 전송 허용 (요청 보낼 때 쿠키도 같이 보내겠다는 거임)
 
     headers: {
         'content-type': 'application/json',

@@ -31,7 +31,7 @@ export interface WalkHistoryResponse {
 }
 
 
-export const history = async (username: string) => {
-    return await api.get(`api/users/sessions/${username}`).json<WalkHistoryResponse>();
+export const history = async () => {
+    return await api.get(`api/users/sessions/`).json<WalkHistoryResponse>();
 }
 

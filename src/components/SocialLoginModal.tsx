@@ -13,7 +13,7 @@ const url = import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com'
 type Provider = 'github' | 'google' | 'naver' | 'kakao';
 
 const socialLogin = async (provider: Provider) => {
-    const data = await fetch(`${url}/api/auth/signin/${provider}`).then((res) => res.json());
+    const data = await fetch(`${url}/api/auth/signin/${provider}?`).then((res) => res.json());
     window.location.href = data.url;
 }
 
