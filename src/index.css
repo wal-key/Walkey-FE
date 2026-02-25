@@ -3,11 +3,17 @@
     --color-primary-silent: #607D8B;
     --color-primary-sparkling: #673AB7;
     --color-primary-cafe: #795548;
+    --color-primary-energy: #E53935;
+    /* Red for active theme */
+    --color-primary-random: #FBC02D;
+    /* Yellow for random theme */
 
     --bg-gradient-nature: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
     --bg-gradient-silent: linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%);
     --bg-gradient-sparkling: linear-gradient(135deg, #121212 0%, #311b92 100%);
     --bg-gradient-cafe: linear-gradient(135deg, #d7ccc8 0%, #efebe9 100%);
+    --bg-gradient-energy: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    --bg-gradient-random: linear-gradient(135deg, #fffde7 0%, #fff9c4 100%);
 
     --font-main: 'Noto Sans KR', sans-serif;
 }
