@@ -13,8 +13,9 @@ const url = import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com'
 type Provider = 'github' | 'google' | 'naver' | 'kakao';
 
 const socialLogin = async (provider: Provider) => {
-    await fetch(`${url}/api/auth/signin/${provider}?redirect_uri=${window.location.origin}`)
+    const data = await fetch(`${url}/api/auth/signin/${provider}?redirect_uri=${window.location.origin}`)
         .then((res) => res.json());
+    window.location.href = data.url; // 받아온 URL로 리다이렉트
 }
 
 
