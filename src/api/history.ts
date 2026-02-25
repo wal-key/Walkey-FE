@@ -26,8 +26,7 @@ interface WalkHistoryItem {
 // 통합본
 export interface WalkHistoryResponse {
     message: string;
-    data: WalkSession;
-    histories: WalkHistoryItem[]
+    data: WalkHistoryItem[]; // 배열로 줌
 }
 
 
