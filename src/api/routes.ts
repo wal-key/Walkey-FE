@@ -11,7 +11,9 @@ export interface RouteItem {
     total_distance: number;
     estimated_time: number;
     thumbnail_url: string;
-    path: Coord[];
+    path?: Coord[];         // 기존 코드 호환
+    paths?: Coord[];        // DB 컬럼명 대응 (단순 경로)
+    detail_paths?: Coord[]; // DB 컬럼명 대응 (상세 경로)
 }
 
 export interface RouteResponse {
