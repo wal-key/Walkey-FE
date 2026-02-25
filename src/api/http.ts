@@ -2,7 +2,7 @@ import ky from 'ky';
 
 // 1. 공통 설정 만들기
 export const api = ky.create({
-    prefixUrl: 'https://walkey-be.onrender.com',
+    prefixUrl: 'https://walkey-be.onrender.com/api',
 
     headers: {
         'content-type': 'application/json',
