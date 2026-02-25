@@ -13,7 +13,7 @@ export default function Records() {
         (
             async () => {
                 try {
-                    const res = await history('jelly');
+                    const res = await history();
                     console.log(res);
                     setHistoryData(res.data);
                 }

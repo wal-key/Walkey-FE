@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWalkey, Theme } from '../context/WalkeyContext';
-import { Trees, Moon, Sparkles, Coffee, HelpCircle } from 'lucide-react';
+import { Trees, Moon, Sparkles, Coffee, HelpCircle, Flame, Map } from 'lucide-react';
 import { getThemes, getCurrentEmotion, ThemeOption } from '../api/themes'; // 함수들 임포트
 import './ThemeSelector.css';
 
@@ -9,6 +9,8 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number | string }>> 
     silent: Moon,
     sparkling: Sparkles,
     cafe: Coffee,
+    active: Flame,
+    random: Map,
 };
 
 // 감정과 테마를 연결하는 매핑 객체

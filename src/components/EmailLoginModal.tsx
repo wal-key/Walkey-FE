@@ -15,9 +15,12 @@ const EmailLoginModal: React.FC<EmailLoginModalProps> = ({ onSwitchToSocial }) =
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [errMessage, setErrMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const handleLogin = async (id: string, password: string) => {
+        setIsLoading(true);
+        setErrMessage('');
         try {
             const loginData = await login(id, password);
             const data = await loginData.json() as any;
@@ -25,10 +28,11 @@ const EmailLoginModal: React.FC<EmailLoginModalProps> = ({ onSwitchToSocial }) =
             setUser(data.data.user); // 로그인 성공 시 사용자 정보 저장
             // setUser(data.user);
             navigate('/walk-setup'); // 급하니깐 일단 이렇게만 ㅎㅎ
-            
+
         } catch (err: any) {
             const data = await err.response.json();
             setErrMessage(data.message || '로그인에 실패했습니다. 다시 시도해주세요.');
+            setIsLoading(false);
         }
     }
 
@@ -59,7 +63,12 @@ const EmailLoginModal: React.FC<EmailLoginModalProps> = ({ onSwitchToSocial }) =
                 </button>
             </div>
 
-
+            {isLoading && (
+                <div className="loading-overlay">
+                    <div className="spinner"></div>
+                    <p className="loading-text">Walkey에 연결 중...</p>
+                </div>
+            )}
         </>
     );
 };

@@ -16,7 +16,7 @@ export default function TimeSlider() {
                 type="range"
                 min="10"
                 max="60"
-                step="10"
+                step="5"
                 value={time}
                 onChange={handleChange}
                 className="slider"
