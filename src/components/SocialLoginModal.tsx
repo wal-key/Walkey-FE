@@ -6,8 +6,8 @@ import './LoginModal.css'; // Shared styles
 interface SocialLoginModalProps {
     onSwitchToEmail: () => void;
 }
-// import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com';
-const url =  'http://localhost:3000/'// 나중에 환경변수만 남기기 
+
+const url =  import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com' // 나중에 환경변수만 남기기 
 
 
 type Provider = 'github' | 'google' | 'naver' | 'kakao';
