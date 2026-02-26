@@ -11,6 +11,7 @@ import RoadView from '../components/RoadView';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { saveRoute, updateRoute } from '../api/saveRoute';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -52,13 +53,14 @@ function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => v
 
 export default function WalkingSession() {
     const navigate = useNavigate();
-    const { theme, selectedRoute, setLastWalk } = useWalkey();
+    const { theme, selectedRoute, user, setLastWalk } = useWalkey();
     const [routePath, setRoutePath] = useState<[number, number][]>([]);
     const [startPos] = useState<[number, number]>([37.5665, 126.9780]); // Custom Start (Seoul City Hall)
     const [isWalking, setIsWalking] = useState(false);
     const [elapsedTime, setElapsedTime] = useState(0);
     const [isRoadView, setIsRoadView] = useState(false);
     const [clickedPos, setClickedPos] = useState<{ lat: number; lng: number } | null>(null);
+    const [sessionId, setSessionId] = useState<string | null>(null);
 
     // Generate Route on Mount
     useEffect(() => {
@@ -89,14 +91,22 @@ export default function WalkingSession() {
         return () => clearInterval(timer);
     }, [isWalking]);
 
-    const handleStartStop = () => {
+    const handleStartStop = async () => {
         if (!isWalking) {
             setIsWalking(true);
+            if (user?.id && selectedRoute?.id) {
+                const data = await saveRoute(user.id, selectedRoute.id) as any; // 나중에 타입 제대로 정의
+                if (data?.data?.id ) {
+                    setSessionId(data.data.id);
+                }
+            }
         } else {
             if (window.confirm('산책을 그만하시겠습니까?')) {
                 alert('산책을 그만합니다.');
                 finishSession(false);
             }
+            const endData = await updateRoute(Number(sessionId), new Date().toISOString(), 1.5, elapsedTime); 
+            console.log('산책 종료 응답', endData);
         }
     };
 
@@ -175,8 +185,8 @@ export default function WalkingSession() {
                             {isWalking ? `${Math.floor(elapsedTime / 60)}:${(elapsedTime % 60).toString().padStart(2, '0')}` : `${selectedRoute?.time}분`}
                         </span>
                     </div>
-                    <div className="d-item">
-                        <span className="label">총 거리</span>
+                    <div className="d-item" onClick={() => { console.log(selectedRoute, user, sessionId) }}>
+                        <span className="label" >총 거리</span>
                         <span className="value">{selectedRoute?.dist}km</span>
                     </div>
                 </div>
