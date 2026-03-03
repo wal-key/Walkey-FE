@@ -9,7 +9,6 @@ interface SocialLoginModalProps {
 
 const url =  import.meta.env.VITE_BACKEND_URL || 'https://walkey-be.onrender.com' // 나중에 환경변수만 남기기 
 
-
 type Provider = 'github' | 'google' | 'naver' | 'kakao';
 
 const socialLogin = async (provider: Provider) => {
