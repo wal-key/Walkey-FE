@@ -21,9 +21,22 @@ const authApi = api.extend({
     }
 })
 
+interface User {
+    id: string;
+    username: string;
+    avatar_url: string;
+}
 
+interface UserResponse {
+    data: User;
+}
 
-
+// 유저 정보 불러오기
+export const userSet = async () => {
+    const response = await api.get('api/users/me').json<UserResponse>();
+    console.log('ㄴㅇㄹㄴㅇㄹ',response)
+    return response.data; 
+}
 
 // 로그인 api로 예시 든거임!
 export const login = async (email: string, password: string) => {
@@ -31,6 +44,8 @@ export const login = async (email: string, password: string) => {
         json: { email, password }
     });
 };
+
+
 
 
 export default login
